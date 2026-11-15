@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>สุขภาพดีประจำวัน</title>
+<style>
+:root{--bg:#f3f8f6;--card:#fff;--tx:#1d2b27;--mu:#5d716b;--pr:#0f9d7a;--pr2:#e1f4ee;--bd:#d8e5e0;--wr:#e08a1e;--bad:#d64545;--ok:#1f9d55;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#111a17;--card:#1a2622;--tx:#e6f1ed;--mu:#9bb1aa;--pr:#34c9a0;--pr2:#1f3a32;--bd:#2c3d37}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#111a17;--card:#1a2622;--tx:#e6f1ed;--mu:#9bb1aa;--pr:#34c9a0;--pr2:#1f3a32;--bd:#2c3d37}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.7 "Sarabun","Noto Sans Thai",system-ui,sans-serif}
+header{padding:22px 16px 8px;max-width:900px;margin:auto}
+h1{margin:0;font-size:1.6rem}h1 span{color:var(--pr)}
+.sub{color:var(--mu);margin:2px 0 0}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:8px;padding:10px 16px;max-width:900px;margin:auto;overflow-x:auto}
+nav button{flex:1;min-width:max-content;padding:10px 14px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:999px;font:inherit;cursor:pointer}
+nav button.on{background:var(--pr);color:#fff;border-color:var(--pr)}
+main{max-width:900px;margin:auto;padding:8px 16px 60px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;margin:12px 0}
+h2{margin:0 0 8px;font-size:1.25rem}h3{margin:14px 0 6px;font-size:1.05rem}
+.info{background:var(--pr2);border-radius:14px;padding:12px 14px;color:var(--tx)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+label{display:block;font-size:.9rem;color:var(--mu);margin-bottom:4px}
+input,select{width:100%;padding:11px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--bg);color:var(--tx);font:inherit}
+.btn{padding:11px 18px;border:0;border-radius:12px;background:var(--pr);color:#fff;font:inherit;cursor:pointer;margin-top:12px}
+.btn.s{background:var(--pr2);color:var(--pr)}.btn.sm{padding:4px 10px;margin:0;font-size:.85rem}
+.days{display:flex;flex-wrap:wrap;gap:6px}.days label{display:flex;align-items:center;gap:4px;margin:0;padding:6px 10px;border:1px solid var(--bd);border-radius:999px;color:var(--tx);width:auto}.days input{width:auto}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.row:last-child{border:0}
+.tag{font-size:.78rem;background:var(--pr2);color:var(--pr);padding:2px 9px;border-radius:999px;margin-left:6px}
+.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:480px;text-align:center}th,td{padding:8px 6px;border-bottom:1px solid var(--bd);font-size:.92rem}td:first-child,th:first-child{text-align:left}
+.big{font-size:2.6rem;font-weight:700;line-height:1.1}
+.bar{height:12px;background:var(--bd);border-radius:99px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:var(--pr)}
+.sc{display:flex;height:14px;border-radius:99px;overflow:hidden;margin:10px 0 2px}.sc i{flex:1}
+ul{padding-left:20px;margin:6px 0}
+.muted{color:var(--mu);font-size:.9rem}
+#alert{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));background:var(--pr);color:#fff;padding:14px;border-radius:14px;display:none;z-index:9}
+.warn{font-size:.85rem;color:var(--mu);border-top:1px dashed var(--bd);margin-top:14px;padding-top:10px}
+.wk{display:flex;align-items:center;justify-content:space-between;margin:8px 0}
+</style></head><body>
+<header><h1>สุขภาพดี<span>ประจำวัน</span></h1><p class="sub">ตัวช่วยดูแลสุขภาพ: ยา · BMI · แคลอรี · ความดันโลหิต</p></header>
+<nav id="nav"><button data-t="med" class="on">💊 ตารางยา</button><button data-t="bmi">⚖️ BMI</button><button data-t="cal">🍚 แคลอรี</button><button data-t="bp">❤️ ความดัน</button></nav>
+<main>
+<!-- MED -->
+<section id="med" class="on">
+<div class="card"><h2>เพิ่มยาและตั้งเวลาเตือน</h2>
+<div class="grid"><div><label>ชื่อยา</label><input id="mn" list="mnl" autocomplete="off" placeholder="เลือกจากรายการ หรือพิมพ์ชื่อยาเอง"><datalist id="mnl"></datalist></div>
+<div><label>ประเภทของยา</label><select id="mt"><option>ยาเม็ด/แคปซูล</option><option>ยาน้ำ</option><option>ยาฉีด</option><option>ยาหยอด/พ่น</option><option>วิตามิน/อาหารเสริม</option><option>อื่น ๆ</option></select></div>
+<div><label>เวลาที่ต้องกิน</label><input id="mh" type="time" value="08:00"></div></div>
+<label style="margin-top:12px">วันที่ต้องกิน</label><div class="days" id="md"></div>
+<button class="btn" id="madd">+ เพิ่มยา</button>
+<p class="muted" id="notif"></p><p class="muted">💡 อยากให้เตือนแม้ปิดเว็บ: ที่ “รายการยาทั้งหมด” กด <b>📅 ตั้งเตือนในปฏิทิน</b> ของแต่ละยา แล้วบันทึกในแอป Google Calendar บนมือถือ จะเตือนซ้ำทุกสัปดาห์ตามวันที่เลือก</p></div>
+<div class="card"><h2>ยาที่ต้องกินวันนี้</h2><div id="today"></div></div>
+<div class="card"><h2>สรุปรายสัปดาห์</h2>
+<div class="wk"><button class="btn s sm" id="wp">← สัปดาห์ก่อน</button><b id="wl"></b><button class="btn s sm" id="wn">สัปดาห์ถัดไป →</button></div>
+<div class="scroll" id="wsum"></div><p class="muted">✓ กินแล้ว · ✗ ลืมกิน · · ไม่มีกำหนด · ⏳ ยังไม่ถึง</p></div>
+<div class="card"><h2>รายการยาทั้งหมด</h2><div id="mlist"></div></div>
+</section>
+<!-- BMI -->
+<section id="bmi">
+<div class="card"><h2>BMI คืออะไร?</h2><div class="info">BMI (Body Mass Index) หรือดัชนีมวลกาย คือค่าที่ใช้ประเมินว่าน้ำหนักเหมาะสมกับส่วนสูงหรือไม่ คำนวณจาก <b>น้ำหนัก (กก.) ÷ ส่วนสูง (ม.)²</b> เกณฑ์ที่ใช้ในที่นี้เป็นเกณฑ์สำหรับคนเอเชีย ซึ่งเป็นเพียงตัวชี้วัดเบื้องต้น ไม่ได้แยกมวลไขมันกับกล้ามเนื้อ</div></div>
+<div class="card"><h2>คำนวณ BMI</h2>
+<div class="grid"><div><label>น้ำหนัก (กก.)</label><input id="bw" type="number" inputmode="decimal" placeholder="60"></div><div><label>ส่วนสูง (ซม.)</label><input id="bh" type="number" inputmode="decimal" placeholder="165"></div></div>
+<button class="btn" id="bgo">คำนวณ</button><div id="bres"></div></div>
+</section>
+<!-- CAL -->
+<section id="cal">
+<div class="card"><h2>1) ข้อมูลของคุณ</h2>
+<div class="grid"><div><label>เพศ</label><select id="cs"><option value="m">ชาย</option><option value="f">หญิง</option></select></div>
+<div><label>อายุ (ปี)</label><input id="ca" type="number" inputmode="numeric"></div>
+<div><label>น้ำหนัก (กก.)</label><input id="cw" type="number" inputmode="decimal"></div>
+<div><label>ส่วนสูง (ซม.)</label><input id="ch" type="number" inputmode="decimal"></div>
+<div><label>กิจกรรมต่อวัน</label><select id="cx"><option value="1.2">นั่งทำงานเป็นหลัก</option><option value="1.375">ออกกำลังเบา 1–3 วัน/สัปดาห์</option><option value="1.55" selected>ออกกำลังปานกลาง 3–5 วัน/สัปดาห์</option><option value="1.725">ออกกำลังหนัก 6–7 วัน/สัปดาห์</option></select></div></div>
+<h2 style="margin-top:16px">2) เป้าหมายของคุณ</h2>
+<div class="grid"><div><select id="cg"><option value="-1">ลดน้ำหนัก</option><option value="0" selected>รักษาน้ำหนัก</option><option value="1">เพิ่มน้ำหนัก/กล้ามเนื้อ</option></select></div></div>
+<button class="btn" id="cgo">คำนวณเป้าหมายแคลอรี</button><div id="cres"></div></div>
+<div class="card"><h2>3) ถ่ายรูปอาหารให้ AI ประเมิน</h2>
+<p class="muted">ถ่ายหรือเลือกรูปอาหาร AI จะแยกเป็นส่วน (ข้าว เนื้อสัตว์ ผัก ฯลฯ) และประมาณแคลอรีจากปริมาณที่เห็นในภาพ</p>
+<input id="ph" type="file" accept="image/*" capture="environment">
+<div id="pprev"></div><input id="phint" style="margin-top:10px" placeholder="บอกรายละเอียดเพิ่ม (ไม่บังคับ) เช่น ข้าว 2 ทัพพี ไม่ใส่น้ำตาล"><button class="btn" id="pgo">🤖 วิเคราะห์รูปอาหารด้วย AI</button><div id="pres"></div></div>
+<div class="card"><h2>บันทึกอาหารวันนี้</h2>
+<div class="grid"><div><label>ชื่ออาหาร</label><input id="fn"></div><div><label>แคลอรี (kcal)</label><input id="fk" type="number" inputmode="numeric"></div></div>
+<button class="btn s" id="fadd">+ เพิ่มเอง</button><div id="flist" style="margin-top:10px"></div><div id="fsum"></div></div>
+</section>
+<!-- BP -->
+<section id="bp">
+<div class="card"><h2>ความดันโลหิตคืออะไร?</h2><div class="info">ความดันโลหิตคือแรงดันของเลือดที่กระทบผนังหลอดเลือดแดงขณะหัวใจบีบตัว (<b>ตัวบน/SYS</b>) และคลายตัว (<b>ตัวล่าง/DIA</b>) หน่วย mmHg ความดันสูงต่อเนื่องเพิ่มความเสี่ยงโรคหัวใจ หลอดเลือดสมอง และไตเสื่อม โดยมักไม่มีอาการ จึงควรวัดสม่ำเสมอ</div></div>
+<div class="card"><h2>บันทึกค่าความดัน</h2>
+<div class="grid"><div><label>ตัวบน (SYS)</label><input id="bs" type="number" inputmode="numeric" placeholder="120"></div><div><label>ตัวล่าง (DIA)</label><input id="bd" type="number" inputmode="numeric" placeholder="80"></div><div><label>ชีพจร (ไม่บังคับ)</label><input id="bpu" type="number" inputmode="numeric"></div></div>
+<button class="btn" id="bpadd">บันทึก</button><div id="bpres"></div></div>
+<div class="card"><h2>กราฟรายสัปดาห์</h2><div class="wk"><button class="btn s sm" id="bwp">←</button><b id="bwl"></b><button class="btn s sm" id="bwn">→</button></div><div id="bch"></div><div id="bsum"></div></div>
+<div class="card"><h2>วิธีควบคุมความดันโลหิต</h2><ul>
+<li><b>ลดเกลือ/โซเดียม</b> ไม่เกิน 2,000 มก./วัน (เกลือราว 1 ช้อนชา) ลดน้ำปลา ซอส อาหารแปรรูป</li>
+<li><b>กินตามแนว DASH</b> ผัก ผลไม้ ธัญพืชไม่ขัดสี นมไขมันต่ำ ลดไขมันอิ่มตัว</li>
+<li><b>ออกกำลังกาย</b> แอโรบิกระดับปานกลาง 150 นาที/สัปดาห์</li>
+<li><b>ควบคุมน้ำหนัก</b> ลดได้ 1 กก. ความดันอาจลดราว 1 mmHg</li>
+<li>งดบุหรี่ จำกัดแอลกอฮอล์ นอนให้พอ 7–8 ชม. จัดการความเครียด</li>
+<li>วัดที่เดิม เวลาเดิม นั่งพัก 5 นาที หลังพิงเก้าอี้ เท้าวางราบ แขนระดับหัวใจ</li>
+<li>กินยาตามแพทย์สั่งสม่ำเสมอ ห้ามหยุดยาเอง</li></ul>
+<p class="warn">ค่าตั้งแต่ 180/120 ขึ้นไปพร้อมอาการปวดศีรษะรุนแรง เจ็บหน้าอก หายใจลำบาก หรืออ่อนแรง ให้ไปพบแพทย์/โทร 1669 ทันที</p></div>
+</section>
+<p class="warn" style="margin:0 16px;max-width:900px">⚠️ เว็บนี้ให้ข้อมูลทั่วไปเพื่อสนับสนุนการดูแลตนเอง ไม่ใช่การวินิจฉัยหรือแทนคำแนะนำของแพทย์/เภสัชกร ข้อมูลทั้งหมดเก็บในเบราว์เซอร์ของคุณเท่านั้น</p>
+</main>
+<div id="alert"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let S={meds:[],log:{},bp:[],food:{},prof:{}};
+try{const r=localStorage.getItem("hd1");if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem("hd1",JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pad=n=>String(n).padStart(2,"0"),ds=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const DN=["อา","จ","อ","พ","พฤ","ศ","ส"];
+const wkStart=o=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-d.getDay()+o*7);return d};
+const wkLabel=s=>{const e=new Date(s);e.setDate(e.getDate()+6);const f=d=>d.toLocaleDateString("th-TH",{day:"numeric",month:"short"});return f(s)+" – "+f(e)};
+function show(t){$$("section").forEach(s=>s.classList.toggle("on",s.id===t));$$("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.t===t));try{history.replaceState(null,"","#"+t)}catch(e){}}
+$$("#nav button").forEach(b=>b.onclick=()=>show(b.dataset.t));
+if(["med","bmi","cal","bp"].includes(location.hash.slice(1)))show(location.hash.slice(1));
+/* MEDS */
+$("#md").innerHTML=DN.map((d,i)=>`<label><input type="checkbox" value="${i}" checked>${d}</label>`).join("");
+let mw=0;
+const MD={"พาราเซตามอล":0,"ไอบูโพรเฟน":0,"แอสไพริน":0,"แอมโลดิพีน":0,"เมตฟอร์มิน":0,"ซิมวาสแตติน":0,"โอเมพราโซล":0,"ลอราทาดีน":0,"อะม็อกซีซิลลิน":0,"ยาแก้ไอน้ำ":1,"ยาลดกรดชนิดน้ำ":1,"อินซูลิน":2,"ยาหยอดตา":3,"ยาพ่นจมูก":3,"ยาพ่นขยายหลอดลม":3,"วิตามินซี":4,"วิตามินดี":4,"แคลเซียม":4,"ธาตุเหล็ก":4,"โอเมก้า-3":4};
+$("#mnl").innerHTML=Object.keys(MD).map(k=>`<option value="${k}">`).join("");
+$("#mn").addEventListener("input",()=>{const i=MD[$("#mn").value];if(i!==undefined)$("#mt").selectedIndex=i});
+$("#madd").onclick=()=>{const n=$("#mn").value.trim();if(!n){$("#mn").focus();return}
+const days=$$("#md input:checked").map(x=>+x.value);if(!days.length)return;
+S.meds.push({id:Date.now(),n,t:$("#mt").value,h:$("#mh").value,days,from:ds(new Date())});$("#mn").value="";save();rMed()};
+const taken=(id,d)=>!!S.log[id+"|"+d];
+function gcal(m){const C=["SU","MO","TU","WE","TH","FR","SA"],d=new Date();while(!m.days.includes(d.getDay()))d.setDate(d.getDate()+1);
+const[hh,mm]=m.h.split(":"),f=x=>x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+"T"+pad(x.getHours())+pad(x.getMinutes())+"00";
+d.setHours(+hh,+mm,0,0);const e=new Date(d.getTime()+600000);
+return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent("💊 กิน"+m.n)+"&details="+encodeURIComponent(m.t)+"&dates="+f(d)+"/"+f(e)+"&recur="+encodeURIComponent("RRULE:FREQ=WEEKLY;BYDAY="+m.days.map(i=>C[i]).join(","))}
+function rMed(){const now=new Date(),td=ds(now),dow=now.getDay();
+const t=S.meds.filter(m=>m.days.includes(dow)).sort((a,b)=>a.h.localeCompare(b.h));
+$("#today").innerHTML=t.length?t.map(m=>`<div class="row"><div><b>${esc(m.n)}</b><span class="tag">${esc(m.t)}</span><div class="muted">เวลา ${m.h} น.</div></div><button class="btn sm ${taken(m.id,td)?"":"s"}" data-k="${m.id}">${taken(m.id,td)?"✓ กินแล้ว":"ยังไม่กิน"}</button></div>`).join(""):'<p class="muted">วันนี้ไม่มียาที่ต้องกิน</p>';
+$$("#today [data-k]").forEach(b=>b.onclick=()=>{const k=b.dataset.k+"|"+td;if(S.log[k])delete S.log[k];else S.log[k]=1;save();rMed()});
+const st=wkStart(mw);$("#wl").textContent=wkLabel(st);
+const days=[...Array(7)].map((_,i)=>{const d=new Date(st);d.setDate(d.getDate()+i);return d});
+let tot=0,ok=0;
+const rows=S.meds.map(m=>`<tr><td>${esc(m.n)}<div class="muted">${m.h}</div></td>${days.map(d=>{const k=ds(d);if(!m.days.includes(d.getDay())||k<m.from)return"<td>·</td>";if(taken(m.id,k)){tot++;ok++;return'<td style="color:var(--ok)">✓</td>'}
+const due=new Date(d);const[hh,mm]=m.h.split(":");due.setHours(+hh,+mm);if(due>now)return"<td>⏳</td>";tot++;return'<td style="color:var(--bad)">✗</td>'}).join("")}</tr>`).join("");
+$("#wsum").innerHTML=S.meds.length?`<table><tr><th>ยา</th>${days.map(d=>`<th>${DN[d.getDay()]}<div class="muted">${d.getDate()}</div></th>`).join("")}</tr>${rows}</table>${tot?`<h3>กินครบ ${ok}/${tot} ครั้ง (${Math.round(ok*100/tot)}%)</h3><div class="bar"><i style="width:${ok*100/tot}%"></i></div>`:""}`:'<p class="muted">ยังไม่มียา เพิ่มยาด้านบนเพื่อเริ่มติดตาม</p>';
+$("#mlist").innerHTML=S.meds.length?S.meds.map(m=>`<div class="row"><div><b>${esc(m.n)}</b><span class="tag">${esc(m.t)}</span><div class="muted">${m.h} น. · ${m.days.length==7?"ทุกวัน":m.days.map(i=>DN[i]).join(" ")}</div></div><div><a class="btn s sm" style="text-decoration:none;display:inline-block" target="_blank" rel="noopener" href="${gcal(m)}">📅 ตั้งเตือนในปฏิทิน</a> <button class="btn s sm" data-d="${m.id}">ลบ</button></div></div>`).join(""):'<p class="muted">—</p>';
+$$("#mlist [data-d]").forEach(b=>b.onclick=()=>{S.meds=S.meds.filter(m=>m.id!=b.dataset.d);save();rMed()})}
+$("#wp").onclick=()=>{mw--;rMed()};$("#wn").onclick=()=>{mw++;rMed()};
+const notified={};
+function chk(){const n=new Date(),hm=pad(n.getHours())+":"+pad(n.getMinutes()),td=ds(n);
+S.meds.forEach(m=>{if(m.days.includes(n.getDay())&&m.h===hm&&!taken(m.id,td)&&!notified[m.id+td+hm]){notified[m.id+td+hm]=1;
+const a=$("#alert");a.textContent="💊 ถึงเวลากิน "+m.n+" ("+m.t+")";a.style.display="block";setTimeout(()=>a.style.display="none",15000);
+try{if(window.Notification&&Notification.permission==="granted")new Notification("ถึงเวลากินยา",{body:m.n})}catch(e){}}})}
+setInterval(chk,20000);
+try{if(window.Notification){if(Notification.permission==="default"){$("#notif").innerHTML='🔔 <a href="#" id="en">เปิดการแจ้งเตือน</a> (การเตือนทำงานขณะเปิดหน้านี้ไว้)';$("#en").onclick=e=>{e.preventDefault();Notification.requestPermission().then(()=>{$("#notif").textContent="การเตือนทำงานขณะเปิดหน้านี้ไว้"})}}else $("#notif").textContent="การเตือนทำงานขณะเปิดหน้านี้ไว้"}else $("#notif").textContent="การเตือนจะแสดงในหน้านี้ขณะเปิดไว้"}catch(e){}
+/* BMI */
+const bmiCat=b=>b<18.5?["น้ำหนักน้อย","#3b82c4",0]:b<23?["น้ำหนักปกติ","#1f9d55",1]:b<25?["น้ำหนักเกิน","#e0a21e",2]:b<30?["โรคอ้วนระดับ 1","#e07a1e",3]:["โรคอ้วนระดับ 2","#d64545",4];
+const TIPS=[
+["กินเพิ่มพลังงานดี: มื้อเล็กเพิ่ม 5–6 มื้อ/วัน เน้นโปรตีน (ไข่ ปลา ถั่ว นม) ธัญพืช ไขมันดีอย่างอะโวคาโด ถั่ว","ออกกำลังแบบ Resistance (ยกน้ำหนัก ดันพื้น สควอท) 2–3 ครั้ง/สัปดาห์เพื่อสร้างกล้ามเนื้อ","นอนให้พอ และปรึกษาแพทย์หากน้ำหนักลดโดยไม่ทราบสาเหตุ"],
+["คงรูปแบบเดิม: จานอาหาร 1/2 ผัก 1/4 โปรตีน 1/4 ข้าว-แป้ง","แอโรบิกปานกลาง 150 นาที/สัปดาห์ + เสริมกล้ามเนื้อ 2 วัน","ดื่มน้ำ 6–8 แก้ว ลดน้ำหวาน นอน 7–8 ชม."],
+["ลดพลังงานราว 300–500 kcal/วัน: ลดน้ำหวาน ของทอด ขนมหวาน เพิ่มผักและโปรตีนไร้มัน","เดินเร็ว/ปั่นจักรยาน 30–45 นาที 5 วัน/สัปดาห์","เป้าหมายลด 0.25–0.5 กก./สัปดาห์ ชั่งน้ำหนักเวลาเดิมสัปดาห์ละครั้ง"],
+["ลดพลังงาน 500 kcal/วัน (ลดได้ราว 0.5 กก./สัปดาห์) เลือกข้าวกล้อง ผักผลไม้ ปลา อกไก่ ลดอาหารผัดทอดและเครื่องดื่มหวาน","แอโรบิก 150–300 นาที/สัปดาห์ + เวทเทรนนิ่ง 2 วัน เริ่มจากเดินแล้วเพิ่มทีละน้อย","จดอาหาร กินช้า ๆ งดกินดึก และควรปรึกษาแพทย์/นักกำหนดอาหาร"],
+["ควรปรึกษาแพทย์หรือนักกำหนดอาหารเพื่อวางแผนเฉพาะบุคคล เพราะมีความเสี่ยงโรคเรื้อรังสูง","เริ่มขยับร่างกายเบา ๆ เช่น เดิน ว่ายน้ำ ปั่นจักรยาน 10–15 นาที แล้วค่อยเพิ่ม","ลดน้ำหวาน ของทอด ของมัน กินผักให้ได้ครึ่งจาน ตั้งเป้าลด 5–10% ของน้ำหนักใน 6 เดือน"]];
+$("#bgo").onclick=()=>{const w=+$("#bw").value,h=+$("#bh").value/100;if(!(w>0&&h>0.5)){$("#bres").innerHTML='<p style="color:var(--bad)">กรุณากรอกน้ำหนักและส่วนสูงให้ถูกต้อง</p>';return}
+const b=w/(h*h),c=bmiCat(b),lo=18.5*h*h,hi=22.9*h*h,pos=Math.min(100,Math.max(0,(b-15)/(35-15)*100));
+const diff=b<18.5?`ควรเพิ่มอย่างน้อย ${(lo-w).toFixed(1)} กก.`:b>=23?`ควรลดประมาณ ${(w-hi).toFixed(1)} กก.`:"อยู่ในเกณฑ์ดีแล้ว";
+$("#bres").innerHTML=`<div class="info" style="margin-top:14px"><div class="big" style="color:${c[1]}">${b.toFixed(1)}</div><b>${c[0]}</b><div class="sc"><i style="background:#3b82c4"></i><i style="background:#1f9d55"></i><i style="background:#e0a21e"></i><i style="background:#e07a1e"></i><i style="background:#d64545"></i></div><div style="position:relative;height:14px"><span style="position:absolute;left:${pos}%;transform:translateX(-50%)">▲</span></div>
+<p class="muted">เกณฑ์เอเชีย: &lt;18.5 น้อย · 18.5–22.9 ปกติ · 23–24.9 เกิน · 25–29.9 อ้วน 1 · ≥30 อ้วน 2</p>
+<p>น้ำหนักปกติสำหรับส่วนสูงนี้: <b>${lo.toFixed(1)}–${hi.toFixed(1)} กก.</b> → ${diff}</p></div>
+<h3>วิธีปรับให้ BMI ได้มาตรฐาน</h3><ul>${TIPS[c[2]].map(x=>`<li>${x}</li>`).join("")}</ul>`}
+/* CAL */
+const today=()=>ds(new Date());
+function target(){const p=S.prof;if(!p.t)return null;return p}
+$("#cgo").onclick=()=>{const a=+$("#ca").value,w=+$("#cw").value,h=+$("#ch").value;if(!(a>0&&w>0&&h>0)){$("#cres").innerHTML='<p style="color:var(--bad)">กรุณากรอกอายุ น้ำหนัก ส่วนสูง</p>';return}
+const bmr=10*w+6.25*h-5*a+($("#cs").value=="m"?5:-161),tdee=bmr*+$("#cx").value,g=+$("#cg").value;
+let t=Math.round(tdee+g*(g<0?-500:300)*(g<0?-1:1));if(g<0)t=Math.round(tdee-500);if(g>0)t=Math.round(tdee+300);
+const floor=$("#cs").value=="m"?1500:1200;const t2=Math.max(t,floor);
+S.prof={t:t2,bmr:Math.round(bmr),tdee:Math.round(tdee),g};save();
+const adv=g<0?`ลดจาก TDEE ประมาณ 500 kcal/วัน คาดว่าลดราว 0.5 กก./สัปดาห์ เน้นโปรตีน ผัก ลดน้ำหวาน/ของทอด และออกกำลังกาย 150 นาที/สัปดาห์`:g>0?`เพิ่มจาก TDEE ประมาณ 300 kcal/วัน เน้นโปรตีนราว 1.6–2 ก./กก. ร่วมกับเวทเทรนนิ่ง 3 วัน/สัปดาห์`:`กินให้เท่ากับ TDEE และออกกำลังกายสม่ำเสมอเพื่อคงน้ำหนัก`;
+$("#cres").innerHTML=`<div class="info" style="margin-top:14px"><div class="muted">เป้าหมายแคลอรีต่อวัน</div><div class="big">${t2} kcal</div><p class="muted">BMR ${Math.round(bmr)} · TDEE ${Math.round(tdee)} kcal${t2>t?" · ปรับขึ้นเพื่อไม่ให้ต่ำกว่าระดับปลอดภัย":""}</p><p>${adv}</p></div>`;rFood()};
+const FV=[["ข้าวสวย 1 ทัพพี","~70 kcal"],["ไข่ต้ม 1 ฟอง","~75 kcal"],["อกไก่ย่าง 100 ก.","~165 kcal"],["ผัดกะเพราไก่ไข่ดาว (1 จาน)","~550 kcal"]];
+function rFood(){const L=S.food[today()]||[];const sum=L.reduce((a,x)=>a+x.k,0),t=S.prof.t;
+$("#flist").innerHTML=L.length?L.map((x,i)=>`<div class="row"><div>${esc(x.n)}</div><div><b>${x.k}</b> kcal <button class="btn s sm" data-x="${i}">ลบ</button></div></div>`).join(""):'<p class="muted">ยังไม่มีรายการวันนี้</p>';
+$$("#flist [data-x]").forEach(b=>b.onclick=()=>{L.splice(+b.dataset.x,1);S.food[today()]=L;save();rFood()});
+$("#fsum").innerHTML=t?`<h3>กินไปแล้ว ${sum} / ${t} kcal</h3><div class="bar"><i style="width:${Math.min(100,sum*100/t)}%"></i></div><p>${sum<t?`วันนี้ยังกินได้อีกประมาณ <b>${t-sum} kcal</b> เช่น ข้าวสวย 2 ทัพพี (~140) + อกไก่ 100 ก. (~165) + ผักลวก`:`กินถึงเป้าหมายแล้ว (เกิน ${sum-t} kcal) มื้อถัดไปเลือกผัก/โปรตีนไร้มัน และขยับร่างกายเพิ่ม`}</p>`:'<p class="muted">คำนวณเป้าหมายแคลอรีด้านบนเพื่อดูว่าวันนี้ควรกินอีกเท่าไร</p>'}
+$("#fadd").onclick=()=>{const n=$("#fn").value.trim(),k=+$("#fk").value;if(!n||!(k>0))return;(S.food[today()]=S.food[today()]||[]).push({n,k});$("#fn").value=$("#fk").value="";save();rFood()};
+let lastItems=[];
+const CAT={carb:["แป้ง/ข้าว","#e0a21e"],protein:["โปรตีน","#d64545"],veg:["ผัก","#1f9d55"],fruit:["ผลไม้","#e07a1e"],fat:["ไขมัน/น้ำมัน","#8a6fd1"],sweet:["หวาน/เครื่องดื่ม","#d6589f"],other:["อื่น ๆ","#6b7f78"]};
+const CF={high:"มั่นใจสูง",medium:"มั่นใจปานกลาง",low:"ประเมินยาก"};
+let cur=[],curDish="",curNote="";
+const rd=f=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)});
+$("#ph").onchange=async()=>{const f=$("#ph").files[0];if(f){try{$("#pprev").innerHTML=`<img src="${await rd(f)}" alt="รูปอาหาร" style="max-width:100%;max-height:220px;border-radius:14px;margin-top:8px">`}catch(e){}}};
+function rPh(){const out=$("#pres"),on=cur.filter(x=>x.on);
+const tot=on.reduce((a,x)=>a+x.kcal*x.m,0),mac=k=>Math.round(on.reduce((a,x)=>a+(x[k]||0)*x.m,0));
+const grp={};on.forEach(x=>grp[x.category]=(grp[x.category]||0)+x.kcal*x.m);
+const eaten=(S.food[today()]||[]).reduce((a,x)=>a+x.k,0),t=S.prof.t;
+const MS=[0.5,0.75,1,1.25,1.5,2];
+out.innerHTML=`<div class="info" style="margin-top:12px"><b>${esc(curDish||"อาหารในรูป")}</b> <span class="muted">· ติ๊กเลือกรายการ และปรับปริมาณให้ตรงกับที่กินจริงได้</span>
+${cur.map((x,i)=>`<div class="row"><label style="display:flex;gap:8px;align-items:flex-start;margin:0;color:var(--tx);flex:1"><input type="checkbox" style="width:auto;margin-top:6px" data-c="${i}" ${x.on?"checked":""}><span>${esc(x.name)}<span class="tag" style="background:${CAT[x.category][1]};color:#fff">${CAT[x.category][0]}</span><div class="muted">${esc(x.portion)}${x.grams?" · ~"+Math.round(x.grams*x.m)+" ก.":""} · ${CF[x.confidence]||""}</div></span></label>
+<div style="text-align:right;white-space:nowrap"><select style="width:auto;padding:4px 6px" data-m="${i}">${MS.map(m=>`<option value="${m}" ${m==x.m?"selected":""}>×${m}</option>`).join("")}</select><div><b>${Math.round(x.kcal*x.m)}</b> kcal</div></div></div>`).join("")}
+<h3>รวม ${Math.round(tot)} kcal</h3>
+<div class="muted">โปรตีน ${mac("protein")} ก. · คาร์บ ${mac("carb")} ก. · ไขมัน ${mac("fat")} ก.</div>
+<h3>แคลอรีแยกตามประเภทอาหาร</h3>${Object.keys(grp).map(k=>`<div style="display:flex;justify-content:space-between"><span>${CAT[k][0]}</span><span>${Math.round(grp[k])} kcal (${tot?Math.round(grp[k]*100/tot):0}%)</span></div><div class="bar"><i style="width:${tot?grp[k]*100/tot:0}%;background:${CAT[k][1]}"></i></div>`).join("")}
+${t?`<p>หลังมื้อนี้ วันนี้จะกินรวม <b>${Math.round(eaten+tot)}/${t}</b> kcal ${eaten+tot<=t?`(เหลืออีก ${Math.round(t-eaten-tot)} kcal)`:`(เกินเป้า ${Math.round(eaten+tot-t)} kcal)`}</p>`:'<p class="muted">คำนวณเป้าหมายแคลอรีด้านบน เพื่อดูว่ามื้อนี้เหลืออีกเท่าไร</p>'}
+${on.length&&!grp.veg?'<p>🥦 มื้อนี้ยังไม่มีผัก ลองเพิ่มผักลวก/สลัดเพื่อให้ได้ใยอาหาร</p>':""}
+${curNote?`<p class="muted">${esc(curNote)}</p>`:""}<p class="muted">ค่าเป็นการประมาณจากภาพ อาจคลาดเคลื่อน หากรู้ปริมาณจริงให้ปรับ ×</p>
+<button class="btn" id="padd" ${on.length?"":"disabled"}>เพิ่มรายการที่เลือกลงบันทึกวันนี้</button></div>`;
+$$("#pres [data-c]").forEach(c=>c.onchange=()=>{cur[+c.dataset.c].on=c.checked;rPh()});
+$$("#pres [data-m]").forEach(s=>s.onchange=()=>{cur[+s.dataset.m].m=+s.value;rPh()});
+$("#padd").onclick=()=>{const L=S.food[today()]=S.food[today()]||[];on.forEach(x=>L.push({n:x.name+(x.m!=1?" ×"+x.m:""),k:Math.round(x.kcal*x.m)}));save();rFood();out.innerHTML='<p class="muted">เพิ่มลงบันทึกวันนี้แล้ว ✓</p>'}}
+$("#pgo").onclick=async()=>{const f=$("#ph").files[0],out=$("#pres");if(!f){out.innerHTML='<p class="muted">กรุณาเลือกรูปก่อน</p>';return}
+out.innerHTML='<p class="muted">AI กำลังแยกส่วนอาหารและประเมินปริมาณ…</p>';
+try{const sample=await claude.use("sample");if(!sample){out.innerHTML='<p class="muted">ฟีเจอร์ AI ใช้ไม่ได้ในมุมมองนี้ กรุณาเพิ่มอาหารด้วยตนเองด้านล่าง</p>';return}
+const lim=await sample.limits();if(!lim.images){out.innerHTML='<p class="muted">การวิเคราะห์รูปยังไม่รองรับ กรุณาเพิ่มอาหารด้วยตนเอง</p>';return}
+const hint=$("#phint").value.trim();
+const r=await sample.json(`คุณเป็นนักกำหนดอาหาร วิเคราะห์รูปอาหารนี้อย่างละเอียด
+1) ระบุเมนูและแยกเป็นส่วนประกอบทุกชิ้นที่เห็น (ข้าว/เส้น เนื้อสัตว์ ผัก ไข่ น้ำจิ้ม ซุป เครื่องดื่ม ของหวาน) อย่ารวมเป็นก้อนเดียว
+2) ประมาณปริมาณจากขนาดจาน ช้อน มือ หรือภาชนะที่เห็นในภาพ แล้วแปลงเป็นหน่วยที่คนไทยเข้าใจ (ทัพพี ชิ้น ฟอง ถ้วย) และเป็นกรัม
+3) คิดแคลอรีจากค่ามาตรฐานอาหารไทย/ทั่วไปต่อกรัม รวมน้ำมัน น้ำตาล กะทิ ที่ซ่อนอยู่ในการปรุง
+4) ให้ protein/carb/fat เป็นกรัม และให้แคลอรีสอดคล้องกัน (โปรตีนและคาร์บ 4 kcal/ก. ไขมัน 9 kcal/ก.)
+5) category ต้องเป็นหนึ่งใน carb, protein, veg, fruit, fat, sweet, other
+${hint?"ข้อมูลเพิ่มเติมจากผู้ใช้ (ให้ยึดตามนี้): "+hint:""}
+ตอบเป็น JSON เท่านั้น: {"dish":"ชื่อเมนู","items":[{"name":"ชื่อ","category":"carb","portion":"เช่น 2 ทัพพี","grams":number,"kcal":number,"protein":number,"carb":number,"fat":number,"confidence":"high|medium|low"}],"note":"ข้อสังเกตสั้น ๆ เช่น ปริมาณน้ำมัน/น้ำตาล"} ถ้าไม่ใช่อาหารให้ items เป็น []`,{images:[f],modelTier:"complex"});
+cur=(r.items||[]).filter(x=>x&&+x.kcal>0).map(x=>({name:String(x.name||"อาหาร"),category:CAT[x.category]?x.category:"other",portion:String(x.portion||""),grams:+x.grams||0,kcal:+x.kcal,protein:+x.protein||0,carb:+x.carb||0,fat:+x.fat||0,confidence:x.confidence,m:1,on:true}));
+curDish=r.dish||"";curNote=r.note||"";
+if(!cur.length){out.innerHTML='<p class="muted">ไม่พบอาหารในรูป ลองถ่ายใหม่ให้เห็นอาหารชัดขึ้น</p>';return}
+rPh()}
+catch(e){out.innerHTML='<p class="muted">วิเคราะห์ไม่สำเร็จ'+(e&&e.code=="not_granted"?" (ยังไม่ได้อนุญาตใช้ AI)":"")+' ลองใหม่หรือเพิ่มเอง</p>'}};
+/* BP */
+const bpCat=(s,d)=>s>=180||d>=120?["วิกฤต ควรพบแพทย์ทันที","#d64545"]:s>=140||d>=90?["สูง (ระดับ 2)","#d64545"]:s>=130||d>=80?["สูงระดับ 1","#e07a1e"]:s>=120?["สูงกว่าปกติเล็กน้อย","#e0a21e"]:s<90||d<60?["ค่อนข้างต่ำ","#3b82c4"]:["ปกติ","#1f9d55"];
+let bw=0;
+$("#bpadd").onclick=()=>{const s=+$("#bs").value,d=+$("#bd").value;if(!(s>50&&d>30&&s>d)){$("#bpres").innerHTML='<p style="color:var(--bad)">กรุณากรอกค่าให้ถูกต้อง (ตัวบนต้องมากกว่าตัวล่าง)</p>';return}
+S.bp.push({ts:Date.now(),s,d,p:+$("#bpu").value||0});save();const c=bpCat(s,d);
+$("#bpres").innerHTML=`<div class="info" style="margin-top:12px"><b style="color:${c[1]}">${s}/${d} mmHg: ${c[0]}</b><p class="muted">เกณฑ์ปกติ &lt;120/80 · สูงระดับ 1 130–139/80–89 · สูงระดับ 2 ≥140/90</p></div>`;$("#bs").value=$("#bd").value=$("#bpu").value="";rBP()};
+function rBP(){const st=wkStart(bw);$("#bwl").textContent=wkLabel(st);const en=new Date(st);en.setDate(en.getDate()+7);
+const L=S.bp.filter(x=>x.ts>=st&&x.ts<en).sort((a,b)=>a.ts-b.ts);
+if(!L.length){$("#bch").innerHTML='<p class="muted">ยังไม่มีข้อมูลในสัปดาห์นี้</p>';$("#bsum").innerHTML="";return}
+const W=640,H=250,pl=40,pr=12,pt=14,pb=34,ymin=40,ymax=200,X=t=>pl+(t-st)/(en-st)*(W-pl-pr),Y=v=>pt+(ymax-v)/(ymax-ymin)*(H-pt-pb);
+let g="";[60,80,100,120,140,160,180].forEach(v=>g+=`<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--bd)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end" font-size="11" fill="var(--mu)">${v}</text>`);
+g+=`<rect x="${pl}" y="${Y(120)}" width="${W-pl-pr}" height="${Y(80)-Y(120)}" fill="var(--ok)" opacity=".08"/>`;
+for(let i=0;i<7;i++){const d=new Date(st);d.setDate(d.getDate()+i);g+=`<text x="${X(+d+43200000)}" y="${H-12}" text-anchor="middle" font-size="12" fill="var(--mu)">${DN[d.getDay()]} ${d.getDate()}</text>`}
+const line=k=>L.map((x,i)=>(i?"L":"M")+X(x.ts)+" "+Y(x[k])).join(" ");
+g+=`<path d="${line("s")}" fill="none" stroke="#d64545" stroke-width="2.5"/><path d="${line("d")}" fill="none" stroke="#3b82c4" stroke-width="2.5"/>`;
+L.forEach(x=>g+=`<circle cx="${X(x.ts)}" cy="${Y(x.s)}" r="4" fill="#d64545"/><circle cx="${X(x.ts)}" cy="${Y(x.d)}" r="4" fill="#3b82c4"/>`);
+$("#bch").innerHTML=`<div class="scroll"><svg viewBox="0 0 ${W} ${H}" style="min-width:480px;width:100%" role="img" aria-label="กราฟความดันโลหิตรายสัปดาห์">${g}</svg></div><p class="muted"><span style="color:#d64545">●</span> ตัวบน (SYS) <span style="color:#3b82c4">●</span> ตัวล่าง (DIA) · แถบเขียว = ช่วงปกติ</p>`;
+const av=k=>Math.round(L.reduce((a,x)=>a+x[k],0)/L.length),s=av("s"),d=av("d"),c=bpCat(s,d);
+$("#bsum").innerHTML=`<div class="info"><b>ค่าเฉลี่ยสัปดาห์นี้ ${s}/${d} mmHg (${L.length} ครั้ง)</b> <span style="color:${c[1]}">· ${c[0]}</span></div>`}
+$("#bwp").onclick=()=>{bw--;rBP()};$("#bwn").onclick=()=>{bw++;rBP()};
+rMed();rFood();rBP();
+</script></body></html>
